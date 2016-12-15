@@ -195,6 +195,9 @@ typedef NS_ENUM(NSInteger, MGSwipeEasingFunction) {
  **/
 -(void) swipeTableCellWillEndSwiping:(MGSwipeTableCell *) cell;
 
+-(void) swipeTableCell:(MGSwipeTableCell *)cell swipeFinished:(MGSwipeDirection) direction;
+-(void) swipeTableCell:(MGSwipeTableCell *)cell swipeReleased:(MGSwipeDirection) direction;
+
 @end
 
 
@@ -203,7 +206,7 @@ typedef NS_ENUM(NSInteger, MGSwipeEasingFunction) {
  * To implement swipe cells you have to override from this class
  * You can create the cells programmatically, using xibs or storyboards
  */
-@interface MGSwipeTableCell : UITableViewCell
+@interface MGSwipeTableCell : UITableViewCell 
 
 /** optional delegate (not retained) */
 @property (nonatomic, weak) id<MGSwipeTableCellDelegate> delegate;

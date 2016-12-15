@@ -1214,6 +1214,10 @@ static inline CGFloat mgEaseInOutBounce(CGFloat t, CGFloat b, CGFloat c) {
             _firstSwipeState = offset > 0 ? MGSwipeStateSwipingLeftToRight : MGSwipeStateSwipingRightToLeft;
         }
         self.swipeOffset = [self filterSwipe:offset];
+        if (self.swipeOffset >= 101.0 && _delegate && [_delegate respondsToSelector:@selector(swipeTableCell:swipeFinished:)]) {
+            MGSwipeDirection direction = _swipeOffset > 0 ? MGSwipeDirectionLeftToRight : MGSwipeDirectionRightToLeft;
+            [_delegate swipeTableCell:self swipeFinished:direction];
+        }
     }
     else {
         MGSwipeButtonsView * expansion = _activeExpansion;
@@ -1260,7 +1264,13 @@ static inline CGFloat mgEaseInOutBounce(CGFloat t, CGFloat b, CGFloat c) {
             else {
                 animation = settings.showAnimation;
             }
-            [self setSwipeOffset:_targetOffset animation:animation completion:nil];
+
+            [self setSwipeOffset:_targetOffset animation:animation completion:^(BOOL finished) {
+                if (finished && _delegate && [_delegate respondsToSelector:@selector(swipeTableCell:swipeReleased:)]) {
+                    MGSwipeDirection direction = _swipeOffset > 0 ? MGSwipeDirectionLeftToRight : MGSwipeDirectionRightToLeft;
+                    [_delegate swipeTableCell:self swipeReleased:direction];
+                }
+            }];
         }
         
         _firstSwipeState = MGSwipeStateNone;
